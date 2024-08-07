@@ -1,7 +1,8 @@
 version: '3.8'
 
 services:
-  ldca-chat:
+  ldca_chat:
+    container_name: "ldca_chat"
     image: ldca-chat:0.0.1
     ports:
       - "8081:8081"
