@@ -35,6 +35,7 @@ ktor {
     docker {
         localImageName.set("ldca-chat")
         imageTag.set("0.0.1")
+        jreVersion.set(JavaVersion.VERSION_21)
         portMappings.set(listOf(
             io.ktor.plugin.features.DockerPortMapping(
                 8081,
