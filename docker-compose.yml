@@ -6,6 +6,9 @@ services:
     image: ldca-chat:0.0.1
     ports:
       - "8081:8081"
+    depends_on:
+      - mongo
+      - kafka
     networks:
       - ldca_network
 
