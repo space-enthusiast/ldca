@@ -72,5 +72,5 @@ services:
       - ldca_network
 
 networks:
-  app_network:
+  ldca_network:
     driver: bridge
