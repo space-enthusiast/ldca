@@ -1,3 +1,4 @@
 .idea
 
 mongodb/data/**
+kafka/data/**
