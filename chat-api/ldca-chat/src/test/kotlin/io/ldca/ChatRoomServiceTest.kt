@@ -68,6 +68,13 @@ class ChatRoomServiceTest : FreeSpec({
                 chatRoomService.joinChatRoom(chatRoomId, user.id)
             }
         }
+        "should prohibit joining a chat room that does not exist" {
+            val chatRoomService = ChatService()
+            val user = User(UUID.randomUUID())
+            shouldThrow<Exception> {
+                chatRoomService.joinChatRoom(UUID.randomUUID(), user.id)
+            }
+        }
     }
     "chatRoomService.getChatRoomUsers()" - {
         "should return a list of chat room users" {
@@ -83,6 +90,12 @@ class ChatRoomServiceTest : FreeSpec({
             chatRoomUsers[0].id shouldBe user1.id
             chatRoomUsers[1].id shouldBe user2.id
         }
+        "should prohibit getting chat room users from chat room that does not exist" {
+            val chatRoomService = ChatService()
+            shouldThrow<Exception> {
+                chatRoomService.getChatRoomUsers(UUID.randomUUID())
+            }
+        }
     }
     "chatRoomService.deleteChatRoom()" - {
         "should delete a chat room" {
@@ -92,6 +105,9 @@ class ChatRoomServiceTest : FreeSpec({
             chatRoomService.deleteChatRoom(chatRoomId)
             val chatRooms = chatRoomService.getChatRooms()
             chatRooms shouldBe emptyList()
+            shouldThrow<Exception> {
+                chatRoomService.getChatRoomUsers(chatRoomId)
+            }
         }
         "should delete a chat room with users" {
             val chatRoomService = ChatService()
@@ -102,6 +118,12 @@ class ChatRoomServiceTest : FreeSpec({
             chatRoomService.deleteChatRoom(chatRoomId)
             val chatRooms = chatRoomService.getChatRooms()
             chatRooms shouldBe emptyList()
+        }
+        "should prohibit deletion of chat room that does not exist" {
+            val chatRoomService = ChatService()
+            shouldThrow<Exception> {
+                chatRoomService.deleteChatRoom(UUID.randomUUID())
+            }
         }
     }
     "chatRoomService.sendChatMessage()" - {
