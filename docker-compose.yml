@@ -12,6 +12,17 @@ services:
     networks:
       - ldca_network
 
+  ldca_chatroom:
+    container_name: "ldca_chatroom"
+    image: ldca-chatroom:0.0.1
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongo
+      - kafka
+    networks:
+      - ldca_network
+
   web:
     image: nginx:latest
     container_name: nginx_web
