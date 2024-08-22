@@ -16,6 +16,6 @@ fun main() {
 fun Application.module() {
     configureSockets()
     configureRouting()
-    configureKafkaProducer()
-    configureKafkaConsumer()
+//    configureKafkaProducer()
+//    configureKafkaConsumer()
 }
