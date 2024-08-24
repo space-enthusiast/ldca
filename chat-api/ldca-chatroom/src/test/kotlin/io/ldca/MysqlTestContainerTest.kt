@@ -5,7 +5,7 @@ import io.kotest.matchers.shouldBe
 import org.testcontainers.containers.MySQLContainer
 import java.sql.DriverManager
 
-class TestContainerTest: FunSpec({
+class MysqlTestContainerTest: FunSpec({
     val mysql = MySQLContainer<Nothing>("mysql:8.0.26").apply {
         startupAttempts = 1
         withDatabaseName("testdb")
