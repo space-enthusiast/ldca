@@ -31,6 +31,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/html:/usr/share/nginx/html
+      - ./front:/front
     networks:
       - ldca_network
 
