@@ -1,12 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Set JAVA_HOME to Java 21 installation directory
-SET JAVA_HOME=C:\Program Files\Java\jdk-21
-
-REM Update the PATH variable
-SET PATH=%JAVA_HOME%\bin;%PATH%
-
 REM Display the Java version to confirm
 java -version
 
@@ -23,30 +17,7 @@ if "!JAVA_VERSION:~0,2!" NEQ "21" (
     echo Error: Java 21 is not installed or not set correctly.
     exit /b 1
 ) else (
-    REM Set JAVA_HOME to Java 21 installation directory
-    SET JAVA_HOME=C:\Program Files\Java\jdk-21
-
-    REM Update the PATH variable
-    SET PATH=%JAVA_HOME%\bin;%PATH%
-
-    REM Display the Java version to confirm
-    java -version
-
-    REM Check if Java 21 is installed
-    for /f "tokens=3" %%i in ('java -version 2^>^&1 ^| findstr "version"') do (
-        set JAVA_VERSION=%%i
-        set JAVA_VERSION=!JAVA_VERSION:"=!
-    )
-
-    echo Detected Java version: !JAVA_VERSION!
-
-    REM Assert that the Java version is 21
-    if "!JAVA_VERSION:~0,2!" NEQ "21" (
-        echo Error: Java 21 is not installed or not set correctly.
-        exit /b 1
-    ) else (
-        echo Java 21 is correctly installed and set.
-    )echo Java 21 is correctly installed and set.
+    echo Java 21 is correctly installed and set.
 )
 
 :: Go to project root directory
