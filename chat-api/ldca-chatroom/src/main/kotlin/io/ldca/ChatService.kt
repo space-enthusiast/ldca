@@ -1,6 +1,5 @@
 package io.ldca
 
-import java.time.OffsetDateTime
 import java.util.UUID
 
 class ChatService {
@@ -40,7 +39,11 @@ class ChatService {
         chatRoomId: UUID,
         userId: UUID,
     ) {
-        TODO()
+        val chatRoomUsers = chatRoomUsers[chatRoomId] ?: throw Exception("Chat room does not exist")
+        if (chatRoomUsers.none { it.id == userId }) {
+            throw Exception("User is not in the chat room")
+        }
+        chatRoomUsers.removeIf { it.id == userId }
     }
     fun getChatRoomUsers(
         chatRoomId: UUID

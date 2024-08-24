@@ -51,16 +51,13 @@ class ChatRoomServiceTest : FreeSpec({
     }
     "chatRoomService.joinChatRoom()" - {
         "should join a chat room" {
-            chatRoomService.createChatRoom("chatRoom1")
-            val chatRooms = chatRoomService.getChatRooms()
-            val chatRoomId = chatRooms[0].id
+            val chatRoomId = chatRoomService.createChatRoom("chatRoom1").id
             val user = User(UUID.randomUUID())
             chatRoomService.joinChatRoom(chatRoomId, user.id)
             val chatRoomUsers = chatRoomService.getChatRoomUsers(chatRoomId)
             chatRoomUsers.size shouldBe 1
             chatRoomUsers[0].id shouldBe user.id
             chatRoomService.deleteChatRoom(chatRoomId)
-            chatRoomService.unJoinChatRoom(chatRoomId, user.id)
         }
         "should prohibit joining a chat room with the same user" {
             chatRoomService.createChatRoom("chatRoom1")
