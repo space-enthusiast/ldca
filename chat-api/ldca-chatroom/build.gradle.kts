@@ -47,8 +47,8 @@ ktor {
         jreVersion.set(JavaVersion.VERSION_21)
         portMappings.set(listOf(
             io.ktor.plugin.features.DockerPortMapping(
-                8083,
-                8083,
+                8082,
+                8082,
                 io.ktor.plugin.features.DockerPortMappingProtocol.TCP
             )
         ))

@@ -16,7 +16,7 @@ services:
     container_name: "ldca_chatroom"
     image: ldca-chatroom:0.0.1
     ports:
-      - "8083:8083"
+      - "8082:8082"
     depends_on:
       - mongo
       - kafka
@@ -27,7 +27,7 @@ services:
     image: nginx:latest
     container_name: nginx_web
     ports:
-      - "8082:80"
+      - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/html:/usr/share/nginx/html

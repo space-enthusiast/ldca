@@ -10,7 +10,7 @@ import io.ldca.plugins.configureRouting
 import io.ldca.plugins.configureSockets
 
 fun main() {
-    embeddedServer(Netty, port = 8083, host = "0.0.0.0", module = Application::module)
+    embeddedServer(Netty, port = 8082, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 
