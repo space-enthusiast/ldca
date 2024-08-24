@@ -3,12 +3,14 @@
 
 ## How to run
 
-1. cd ./chat-api/ldca-chat 
-2. `./gradlew buildImage` # needs JRE 19 or just run it in IDE
-3. `cd ../../`
-3. `docker-compose up --build`
+### requirements
+- docker + docker-compose
+- java 21 set to default system java
 
-> references:
-```
-https://github.com/ktorio/ktor-samples/tree/main/chat
-```
+### run (linux, macos)
+1. `cd ./devops/local`
+2. `build_and_deploy.sh`
+
+### run (windows)
+1. `cd ./devops/local`
+2. `build_and_deploy.bat`
