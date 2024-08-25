@@ -24,6 +24,10 @@ if "!JAVA_VERSION:~0,2!" NEQ "21" (
 echo Go to project root directory
 cd ..\..
 
+:: Erase the kafka/data folder
+echo Erase the kafka/data folder
+rmdir /s /q kafka\data
+
 :: Start build the Docker image for ldca-chat
 echo Start build the Docker image for ldca-chat
 cd chat-api\ldca-chat

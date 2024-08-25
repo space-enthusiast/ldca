@@ -1,12 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Page Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Rooms</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="container mt-5">
+    <h1 class="text-center">Chat Rooms</h1>
 
-<h1>This is a Heading</h1>
-<p>This is a paragraph.</p>
+    <!-- Refresh Button -->
+    <div class="text-center mb-4">
+        <button id="refreshBtn" class="btn btn-primary">Refresh Chat Rooms</button>
+    </div>
 
+    <!-- Chat Room List -->
+    <ul id="chatRoomList" class="list-group mb-4"></ul>
+
+    <!-- Create New Chat Room -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Create New Chat Room</h5>
+            <form id="createChatRoomForm">
+                <div class="form-group">
+                    <label for="chatRoomName">Chat Room Name:</label>
+                    <input type="text" id="chatRoomName" class="form-control" placeholder="Enter chat room name" required>
+                </div>
+                <button type="submit" class="btn btn-success">Create Chat Room</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_GET_CHATROOMS = '/chatrooms';
+    const API_CREATE_CHATROOM = '/chatrooms';
+
+    function fetchChatRooms() {
+        fetch(API_GET_CHATROOMS)
+            .then(response => response.json())
+            .then(data => {
+                const chatRoomList = document.getElementById('chatRoomList');
+                chatRoomList.innerHTML = ''; // Clear the list
+                console.log(data);
+                data.forEach(room => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = room.name;
+                    chatRoomList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error fetching chat rooms:', error));
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', fetchChatRooms);
+
+    document.getElementById('createChatRoomForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const chatRoomName = document.getElementById('chatRoomName').value;
+
+        fetch(API_CREATE_CHATROOM, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: chatRoomName })
+        })
+            .then(response => {
+                if (response.ok) {
+                    fetchChatRooms();
+                    document.getElementById('chatRoomName').value = '';
+                } else {
+                    alert('Failed to create chat room');
+                }
+            })
+            .catch(error => console.error('Error creating chat room:', error));
+    });
+
+    // Load Chat Rooms when the page loads
+    document.addEventListener('DOMContentLoaded', fetchChatRooms);
+</script>
 </body>
 </html>

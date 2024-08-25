@@ -32,6 +32,9 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/html:/usr/share/nginx/html
       - ./front:/front
+    depends_on:
+      - ldca_chat
+      - ldca_chatroom
     networks:
       - ldca_network
 
