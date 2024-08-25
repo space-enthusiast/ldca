@@ -4,8 +4,6 @@ import io.ktor.server.application.Application
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ldca.plugins.configureKafkaAdminClient
-import io.ldca.plugins.configureKafkaConsumer
-import io.ldca.plugins.configureKafkaProducer
 import io.ldca.plugins.configureRouting
 import io.ldca.plugins.configureSockets
 
