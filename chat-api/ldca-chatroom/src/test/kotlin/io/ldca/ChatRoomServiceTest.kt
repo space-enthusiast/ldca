@@ -3,9 +3,26 @@ package io.ldca
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
+import io.ldca.plugins.KafkaAdminClient
+import io.ldca.plugins.kafkaAdminClient
+import org.testcontainers.containers.KafkaContainer
+import org.testcontainers.utility.DockerImageName
 import java.util.UUID
 
 class ChatRoomServiceTest : FreeSpec({
+
+    val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0")).withKraft()
+
+    beforeSpec {
+        kafka.start()
+        println(kafka.bootstrapServers)
+        KafkaAdminClient.initialize(kafka.bootstrapServers)
+        kafkaAdminClient = KafkaAdminClient.instance
+    }
+
+    afterSpec {
+        kafka.stop()
+    }
 
     val chatRoomService = ChatService()
 
@@ -30,6 +47,11 @@ class ChatRoomServiceTest : FreeSpec({
             chatRooms.size shouldBe 1
             chatRooms[0].name shouldBe "chatRoom1"
             chatRoomService.deleteChatRoom(chatRoom1.id)
+        }
+        "created chat room name should have a chatroom prefix" {
+            val chatRoom = chatRoomService.createChatRoom("chatRoom1")
+            chatRoom.kafkaTopicName.startsWith("chatroom-") shouldBe true
+            chatRoomService.deleteChatRoom(chatRoom.id)
         }
         "should create multiple chat rooms" {
             val chatRoom1 = chatRoomService.createChatRoom("chatRoom1")

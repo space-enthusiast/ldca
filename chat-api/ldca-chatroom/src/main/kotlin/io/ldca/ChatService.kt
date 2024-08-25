@@ -1,12 +1,13 @@
 package io.ldca
 
+import io.ldca.plugins.createTopic
+import io.ldca.plugins.deleteTopic
 import java.util.UUID
 
 class ChatService {
 
     private val chatRooms = mutableSetOf<ChatRoom>()
     private val chatRoomUsers = mutableMapOf<UUID, MutableSet<User>>()
-    private val chatMessages = mutableMapOf<UUID, MutableList<ChatMessage>>()
 
     fun getChatRooms(): List<ChatRoom> {
         return chatRooms.toList()
@@ -14,13 +15,18 @@ class ChatService {
     fun createChatRoom(
         chatRoomName: String,
     ): ChatRoom {
-        val chatRoom = ChatRoom(
-            id = UUID.randomUUID(),
-            name = chatRoomName
-        )
         if (chatRooms.any { it.name == chatRoomName }) {
             throw Exception("Chat room with the same name already exists")
         }
+        val chatRoom = ChatRoom(
+            id = UUID.randomUUID(),
+            name = chatRoomName,
+            kafkaTopicName = "chatroom-${UUID.randomUUID()}".also { createTopic(
+                topicName = it,
+                numPartitions = 1,
+                replicationFactor = 1
+            ) }
+        )
         chatRooms.add(chatRoom)
         chatRoomUsers[chatRoom.id] = mutableSetOf()
         return chatRoom
@@ -53,10 +59,12 @@ class ChatService {
     fun deleteChatRoom(
         chatRoomId: UUID,
     ) {
-        if (chatRooms.none { it.id == chatRoomId }) {
-            throw Exception("Chat room does not exist")
-        }
+        val kafkaTopicName = getChatRoom(chatRoomId).kafkaTopicName
         chatRoomUsers.remove(chatRoomId)
+        deleteTopic(kafkaTopicName)
         chatRooms.removeIf { it.id == chatRoomId }
+    }
+    fun getChatRoom(chatRoomId: UUID): ChatRoom {
+        return chatRooms.find { it.id == chatRoomId } ?: throw Exception("Chat room does not exist")
     }
 }
