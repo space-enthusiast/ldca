@@ -4,6 +4,9 @@ set -e
 echo "go to project root directory"
 cd ../..
 
+echo "erase kafka directory"
+rm -rf kafka/data/*
+
 echo "start build the Docker image"
 cd ./chat-api/ldca-chat
 ./gradlew buildImage
@@ -23,5 +26,5 @@ echo "end build the Docker image"
 
 cd ../..
 
-docker-compose up --build -d
+docker-compose up --build --force-recreate -d
 
