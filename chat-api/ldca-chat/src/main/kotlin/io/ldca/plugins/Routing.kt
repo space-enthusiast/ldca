@@ -13,10 +13,6 @@ import java.util.UUID
 fun Application.configureRouting() {
     routing {
         get("/") {
-            application.log.info("Hello from Ktor!")
-            val uuid = UUID.randomUUID().toString()
-            producer.send(ProducerRecord("test", uuid, "Hello, world!".encodeToByteArray())) // Or asyncSend
-            application.log.info("Sending message to Kafka")
             call.respondText("Hello World!")
         }
     }

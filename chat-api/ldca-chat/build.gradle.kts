@@ -37,6 +37,11 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotlin_test_version")
+    testImplementation("org.testcontainers:testcontainers:1.20.1")
+    testImplementation("org.testcontainers:kafka:1.20.1")
+    testImplementation("io.kotest.extensions:kotest-extensions-testcontainers:2.0.2")
+    testImplementation("org.testcontainers:mysql:1.20.1")
+    testImplementation("mysql:mysql-connector-java:8.0.32")
 
 }
 
