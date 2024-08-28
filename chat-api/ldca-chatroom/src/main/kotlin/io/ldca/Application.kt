@@ -8,7 +8,6 @@ import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ldca.plugins.configureKafkaAdminClient
 import io.ldca.plugins.configureRouting
-import io.ldca.plugins.configureSockets
 
 
 fun main() {
@@ -20,7 +19,6 @@ fun Application.module() {
     install(ContentNegotiation) {
         json()
     }
-    configureSockets()
     configureRouting()
     configureKafkaAdminClient()
 }
