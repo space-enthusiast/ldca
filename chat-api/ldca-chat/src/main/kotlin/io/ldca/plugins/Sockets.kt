@@ -15,7 +15,7 @@ fun Application.configureSockets() {
         masking = false
     }
     routing {
-        webSocket("/ws") { // websocketSession
+        webSocket("/chat") {
             for (frame in incoming) {
                 if (frame is Frame.Text) {
                     val text = frame.readText()

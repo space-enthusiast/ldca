@@ -1,0 +1,60 @@
+package io.ldca
+
+import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.shouldBe
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.websocket.WebSockets
+import io.ktor.client.plugins.websocket.webSocket
+import io.ktor.server.testing.testApplication
+import io.ktor.websocket.Frame
+import io.ktor.websocket.readText
+import io.ldca.plugins.configureKafkaAdminClient
+import io.ldca.plugins.configureSockets
+import io.ldca.plugins.createTopic
+import java.util.UUID
+
+class ChatServiceTest: FreeSpec({
+    "chat service test" - {
+        "chat message send & receive test" {
+            testApplication {
+                val chatRoomId = UUID.randomUUID()
+                application {
+                    configureSockets()
+                    configureKafkaAdminClient(kafkaBootStrapServers = kafkaTestContainer.bootstrapServers)
+                    createTopic(
+                        "chatroom-$chatRoomId",
+                        1,
+                        1,
+                    )
+                }
+
+                data class UserClient(
+                    val client: HttpClient,
+                    val user: User,
+                )
+
+                val user1 = UserClient(
+                    client = createClient { install(WebSockets) },
+                    user = User(UUID.randomUUID())
+                )
+
+                val user2 = UserClient(
+                    client = createClient { install(WebSockets) },
+                    user = User(UUID.randomUUID())
+                )
+
+                val message = "chat message"
+
+                user1.client.webSocket("/chat/$chatRoomId/user/${user1.user.id}") {
+                    send(Frame.Text(message))
+                }
+
+                user2.client.webSocket("/chat/$chatRoomId/user/${user2.user.id}") {
+                    val receivedFrame = incoming.receive() as Frame.Text
+                    val receivedText = receivedFrame.readText()
+                    receivedText shouldBe message
+                }
+            }
+        }
+    }
+})

@@ -54,7 +54,7 @@ fun getTopics(): Collection<String> {
 
 lateinit var kafkaAdminClient: AdminClient
 
-fun Application.configureKafkaAdminClient() {
-    KafkaAdminClient.initialize("kafka:9092")
+fun Application.configureKafkaAdminClient(kafkaBootStrapServers: String = "kafka:9092") {
+    KafkaAdminClient.initialize(kafkaBootStrapServers)
     kafkaAdminClient = KafkaAdminClient.instance
 }
