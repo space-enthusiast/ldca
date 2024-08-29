@@ -8,9 +8,11 @@ import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.server.testing.testApplication
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
+import io.ldca.plugins.KafkaAdminClient
+import io.ldca.plugins.KafkaProducerConfig
 import io.ldca.plugins.configureKafkaAdminClient
-import io.ldca.plugins.configureSockets
-import io.ldca.plugins.createTopic
+import io.ldca.plugins.configureChat
+import org.apache.kafka.clients.admin.NewTopic
 import java.util.UUID
 
 class ChatServiceTest: FreeSpec({
@@ -19,13 +21,16 @@ class ChatServiceTest: FreeSpec({
             testApplication {
                 val chatRoomId = UUID.randomUUID()
                 application {
-                    configureSockets()
+                    val producer = KafkaProducerConfig(kafkaTestContainer.bootstrapServers)
+                    configureChat(producer, kafkaTestContainer.bootstrapServers)
                     configureKafkaAdminClient(kafkaBootStrapServers = kafkaTestContainer.bootstrapServers)
-                    createTopic(
+                    val adminClient = KafkaAdminClient.instance
+                    val newTopic = NewTopic(
                         "chatroom-$chatRoomId",
                         1,
                         1,
                     )
+                    adminClient.createTopics(listOf(newTopic)).all().get()
                 }
 
                 data class UserClient(

@@ -27,14 +27,7 @@ object KafkaAdminClient {
 }
 
 fun createTopic(topicName: String, numPartitions: Int, replicationFactor: Short) {
-    val adminClient = KafkaAdminClient.instance
-    val newTopic = NewTopic(topicName, numPartitions, replicationFactor)
-    try {
-        adminClient.createTopics(listOf(newTopic)).all().get()
-        println("Topic $topicName created successfully.")
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+
 }
 
 fun deleteTopic(topicName: String) {
@@ -54,7 +47,7 @@ fun getTopics(): Collection<String> {
 
 lateinit var kafkaAdminClient: AdminClient
 
-fun Application.configureKafkaAdminClient(kafkaBootStrapServers: String = "kafka:9092") {
+fun Application.configureKafkaAdminClient(kafkaBootStrapServers: String) {
     KafkaAdminClient.initialize(kafkaBootStrapServers)
     kafkaAdminClient = KafkaAdminClient.instance
 }
