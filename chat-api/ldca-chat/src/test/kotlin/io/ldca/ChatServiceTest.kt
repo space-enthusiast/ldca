@@ -1,12 +1,14 @@
 package io.ldca
 
 import io.kotest.core.spec.style.FreeSpec
+import io.kotest.engine.test.logging.trace
 import io.kotest.matchers.shouldBe
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.server.testing.testApplication
 import io.ktor.websocket.Frame
+import io.ktor.websocket.close
 import io.ktor.websocket.readText
 import io.ldca.plugins.KafkaAdminClient
 import io.ldca.plugins.KafkaProducerConfig
@@ -54,11 +56,15 @@ class ChatServiceTest: FreeSpec({
                     send(Frame.Text(message))
                 }
 
+                var messageReceived = false
                 user2.client.webSocket("/chat/$chatRoomId/user/${user2.user.id}") {
                     val receivedFrame = incoming.receive() as Frame.Text
                     val receivedText = receivedFrame.readText()
-                    receivedText shouldBe message
+                    receivedText shouldBe message.also {
+                        messageReceived = true
+                    }
                 }
+                messageReceived shouldBe true
             }
         }
     }

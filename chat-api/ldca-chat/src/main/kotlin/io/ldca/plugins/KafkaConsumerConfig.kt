@@ -1,11 +1,11 @@
 package io.ldca.plugins
 
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.channels.Channel
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -23,23 +23,48 @@ class KafkaConsumerConfig(bootstrapServers: String, groupId: String) {
     }
 
     private val consumer: KafkaConsumer<String, String> = KafkaConsumer(properties)
-    @OptIn(DelicateCoroutinesApi::class)
-    private val scope = CoroutineScope(newSingleThreadContext("KafkaConsumerThread") + Job())
+    private val scope = CoroutineScope(Dispatchers.IO)
 
-    fun consumeMessages(topic: String, onMessage: suspend (String, String) -> Unit) {
-        consumer.subscribe(listOf(topic))
-        scope.launch {
+    @OptIn(DelicateCoroutinesApi::class)
+    fun consumeMessages(topic: String, channel: Channel<String>): Job {
+        return scope.launch {
             while (true) {
-                val records = consumer.poll(Duration.ofMillis(100))
+                if (channel.isClosedForSend) {
+                    consumer.close()
+                    break
+                }
+
+                val records = pollAndConsume(consumer, topic)
                 for (record in records) {
-                    onMessage(record.key(), record.value())
+                    try {
+                        channel.send(record)
+                    } catch (e: Exception) {
+                        throw e
+                    }
                 }
             }
         }
     }
 
+    @Synchronized
+    private fun pollAndConsume(
+        consumer: KafkaConsumer<String, String>,
+        topic: String,
+    ): List<String> {
+        consumer.subscribe(listOf(topic))
+        val consumedMessages = mutableListOf<String>()
+        val records = consumer.poll(Duration.ofMillis(100)).also {
+            for (record in it) {
+                val message = record.value()
+                consumedMessages.add(message)
+                println("Consumed message: $message")
+            }
+        }
+        consumer.commitSync()
+        return consumedMessages
+    }
+
     fun close() {
-        scope.cancel()
         consumer.close()
     }
 }

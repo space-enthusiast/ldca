@@ -14,3 +14,11 @@
 ### run (windows)
 1. `cd ./devops/local`
 2. `build_and_deploy.bat`
+
+
+
+---
+
+
+### references
+> https://nabeelvalley.co.za/blog/2023/11-11/interacting-with-kafka-using-kotlin/
