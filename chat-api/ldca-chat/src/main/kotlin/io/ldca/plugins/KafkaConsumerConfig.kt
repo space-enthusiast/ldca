@@ -27,6 +27,7 @@ class KafkaConsumerConfig(bootstrapServers: String, groupId: String) {
 
     @OptIn(DelicateCoroutinesApi::class)
     fun consumeMessages(topic: String, channel: Channel<String>): Job {
+        consumer.subscribe(listOf(topic))
         return scope.launch {
             while (true) {
                 if (channel.isClosedForSend) {
@@ -51,7 +52,6 @@ class KafkaConsumerConfig(bootstrapServers: String, groupId: String) {
         consumer: KafkaConsumer<String, String>,
         topic: String,
     ): List<String> {
-        consumer.subscribe(listOf(topic))
         val consumedMessages = mutableListOf<String>()
         val records = consumer.poll(Duration.ofMillis(100)).also {
             for (record in it) {

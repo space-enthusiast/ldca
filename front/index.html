@@ -16,7 +16,9 @@
     </div>
 
     <!-- Chat Room List -->
-    <ul id="chatRoomList" class="list-group mb-4"></ul>
+    <ul id="chatRoomList" class="list-group mb-4">
+        <li class="list-group-item">chatroom1</li>
+    </ul>
 
     <!-- Create New Chat Room -->
     <div class="card">
@@ -34,8 +36,8 @@
 </div>
 
 <script>
-    const API_GET_CHATROOMS = '/chatrooms';
-    const API_CREATE_CHATROOM = '/chatrooms';
+    const API_GET_CHATROOMS = 'api/chatrooms';
+    const API_CREATE_CHATROOM = 'api/chatrooms';
 
     function fetchChatRooms() {
         fetch(API_GET_CHATROOMS)
@@ -48,10 +50,21 @@
                     const li = document.createElement('li');
                     li.className = 'list-group-item';
                     li.textContent = room.name;
+
+                    const joinButton = document.createElement('button');
+                    joinButton.className = 'btn btn-secondary btn-sm float-right join-btn';
+                    joinButton.textContent = 'Join';
+                    joinButton.addEventListener('click', () => joinChatRoom(room.id));
+
+                    li.appendChild(joinButton);
                     chatRoomList.appendChild(li);
                 });
             })
             .catch(error => console.error('Error fetching chat rooms:', error));
+    }
+
+    function joinChatRoom(chatRoomId) {
+        window.location.href = `chatroom/${chatRoomId}/user/${crypto.randomUUID()}`;
     }
 
     document.getElementById('refreshBtn').addEventListener('click', fetchChatRooms);

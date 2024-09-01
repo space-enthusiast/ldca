@@ -36,7 +36,7 @@ fun Application.configureChat(
         masking = false
     }
     routing {
-        webSocket("/chat/{chatRoomId}/user/{userId}") {
+        webSocket("/api/chat/{chatRoomId}/user/{userId}") {
 
             val groupUuid = UUID.randomUUID().toString()
 

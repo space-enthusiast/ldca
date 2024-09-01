@@ -18,11 +18,11 @@ fun Application.configureRouting() {
             call.respondText("Hello World!")
         }
 
-        get("/chatrooms") {
+        get("/api/chatrooms") {
             call.respond(chatRoomService.getChatRooms())
         }
 
-        post("/chatrooms") {
+        post("/api/chatrooms") {
             val req = call.receive<CreateChatRoomRequest>()
             val chatRoomName = req.name
             try {

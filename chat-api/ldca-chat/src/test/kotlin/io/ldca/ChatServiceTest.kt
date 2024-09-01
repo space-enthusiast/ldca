@@ -52,12 +52,12 @@ class ChatServiceTest: FreeSpec({
 
                 val message = "chat message"
 
-                user1.client.webSocket("/chat/$chatRoomId/user/${user1.user.id}") {
+                user1.client.webSocket("/api/chat/$chatRoomId/user/${user1.user.id}") {
                     send(Frame.Text(message))
                 }
 
                 var messageReceived = false
-                user2.client.webSocket("/chat/$chatRoomId/user/${user2.user.id}") {
+                user2.client.webSocket("/api/chat/$chatRoomId/user/${user2.user.id}") {
                     val receivedFrame = incoming.receive() as Frame.Text
                     val receivedText = receivedFrame.readText()
                     receivedText shouldBe message.also {
