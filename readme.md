@@ -26,3 +26,5 @@
 
 ### references
 > https://nabeelvalley.co.za/blog/2023/11-11/interacting-with-kafka-using-kotlin/
+> https://adoptium.net/blog/2021/12/eclipse-temurin-linux-installers-available/
+> https://www.rosehosting.com/blog/how-to-install-java-21-on-ubuntu-24-04/
