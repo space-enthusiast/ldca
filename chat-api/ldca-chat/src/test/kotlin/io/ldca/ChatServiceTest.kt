@@ -1,18 +1,14 @@
 package io.ldca
 
 import io.kotest.core.spec.style.FreeSpec
-import io.kotest.engine.test.logging.trace
 import io.kotest.matchers.shouldBe
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.server.testing.testApplication
 import io.ktor.websocket.Frame
-import io.ktor.websocket.close
 import io.ktor.websocket.readText
-import io.ldca.plugins.KafkaAdminClient
 import io.ldca.plugins.KafkaProducerConfig
-import io.ldca.plugins.configureKafkaAdminClient
 import io.ldca.plugins.configureChat
 import org.apache.kafka.clients.admin.NewTopic
 import java.util.UUID

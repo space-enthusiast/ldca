@@ -1,4 +1,4 @@
-package io.ldca.plugins
+package io.ldca
 
 import io.ktor.server.application.Application
 import org.apache.kafka.clients.admin.AdminClient
@@ -20,29 +20,6 @@ object KafkaAdminClient {
     fun initialize(bootstrapServer: String) {
         _bootstrapServer = bootstrapServer
     }
-
-    fun close() {
-        instance.close()
-    }
-}
-
-fun createTopic(topicName: String, numPartitions: Int, replicationFactor: Short) {
-
-}
-
-fun deleteTopic(topicName: String) {
-    val adminClient = KafkaAdminClient.instance
-    try {
-        adminClient.deleteTopics(listOf(topicName)).all().get()
-        println("Topic $topicName deleted successfully.")
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-}
-
-fun getTopics(): Collection<String> {
-    return kafkaAdminClient.listTopics().names().get()
-        ?: emptyList()
 }
 
 lateinit var kafkaAdminClient: AdminClient

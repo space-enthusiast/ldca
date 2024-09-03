@@ -1,8 +1,6 @@
 package io.ldca
 
 import io.kotest.core.config.AbstractProjectConfig
-import io.ldca.plugins.KafkaAdminClient
-import io.ldca.plugins.kafkaAdminClient
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.utility.DockerImageName
 
