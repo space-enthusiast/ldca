@@ -11,7 +11,8 @@
 
 ### run (linux, macos)
 1. `cd ./devops/local`
-2. `build_and_deploy.sh`
+2. `chmod +x build_and_deploy.sh`
+3. `build_and_deploy.sh`
 
 ### run (windows)
 1. `cd ./devops/local`
