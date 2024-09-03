@@ -7,7 +7,8 @@
 - docker + docker-compose
 - java 21 set to default system java
 
-> always run the command below at ldca projet root directory DO NOT RUN IT IN ANY OTHER DIRECTORY 
+> always run the command below at ldca projet /devops/local folder DO NOT RUN IT IN ANY OTHER DIRECTORY 
+> ex) `cd ./devops/local && ./build_and_deploy.sh`
 
 ### run (linux, macos)
 1. `cd ./devops/local`
