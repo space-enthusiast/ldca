@@ -34,14 +34,9 @@ class KafkaConsumerConfig(bootstrapServers: String, groupId: String) {
                     consumer.close()
                     break
                 }
-
-                val records = pollAndConsume(consumer, topic)
-                for (record in records) {
-                    try {
-                        channel.send(record)
-                    } catch (e: Exception) {
-                        throw e
-                    }
+                val consumedMessages = pollAndConsume(consumer)
+                for (message in consumedMessages) {
+                    channel.send(message)
                 }
             }
         }
@@ -50,21 +45,16 @@ class KafkaConsumerConfig(bootstrapServers: String, groupId: String) {
     @Synchronized
     private fun pollAndConsume(
         consumer: KafkaConsumer<String, String>,
-        topic: String,
     ): List<String> {
         val consumedMessages = mutableListOf<String>()
-        val records = consumer.poll(Duration.ofMillis(100)).also {
-            for (record in it) {
-                val message = record.value()
-                consumedMessages.add(message)
-                println("Consumed message: $message")
-            }
+        val records = consumer.poll(Duration.ofMillis(100))
+        for (record in records) {
+            val message = record.value()
+            consumedMessages.add(message)
+            println("Consumed message: ${record.value()}")
         }
-        consumer.commitSync()
-        return consumedMessages
-    }
-
-    fun close() {
-        consumer.close()
+        return consumedMessages.also {
+            consumer.commitSync()
+        }
     }
 }
