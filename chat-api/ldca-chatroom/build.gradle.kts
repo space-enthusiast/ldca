@@ -42,6 +42,7 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-extensions-testcontainers:2.0.2")
     testImplementation("org.testcontainers:mysql:1.20.1")
     testImplementation("mysql:mysql-connector-java:8.0.32")
+    implementation("co.elastic.apm:apm-agent-attach:1.51.0")
 
 }
 
