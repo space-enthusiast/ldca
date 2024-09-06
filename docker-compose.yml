@@ -11,6 +11,7 @@ services:
       - kafka
     networks:
       - ldca_network
+      - elastic
 
   ldca_chatroom:
     container_name: "ldca_chatroom"
@@ -22,6 +23,7 @@ services:
       - kafka
     networks:
       - ldca_network
+      - elastic
 
   web:
     image: nginx:latest
@@ -37,6 +39,7 @@ services:
       - ldca_chatroom
     networks:
       - ldca_network
+      - elastic
 
   mongo:
     image: mongo:latest
@@ -47,6 +50,7 @@ services:
       - ./mongodb/data:/data/db
     networks:
       - ldca_network
+      - elastic
 
   zookeeper:
     image: bitnami/zookeeper:latest
@@ -57,6 +61,7 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     networks:
       - ldca_network
+      - elastic
 
   kafka:
     image: bitnami/kafka:latest
@@ -78,6 +83,7 @@ services:
       - ./kafka/data:/bitnami/kafka
     networks:
       - ldca_network
+      - elastic
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -92,7 +98,10 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
     networks:
       - ldca_network
+      - elastic
 
 networks:
   ldca_network:
     driver: bridge
+  elastic:
+    external: true  # Reference the external elastic network

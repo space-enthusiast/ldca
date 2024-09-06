@@ -14,7 +14,7 @@ import io.ldca.plugins.configureRouting
 fun main() {
     embeddedServer(Netty, port = 8082, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
-    ElasticApmAttacher.attach()
+//    ElasticApmAttacher.attach()
 }
 
 fun Application.module() {
