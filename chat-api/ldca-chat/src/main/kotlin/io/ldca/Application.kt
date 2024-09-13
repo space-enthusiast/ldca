@@ -9,21 +9,21 @@ import io.ldca.plugins.KafkaProducerConfig
 import io.ldca.plugins.configureChat
 import io.ldca.plugins.configureRouting
 import io.opentelemetry.api.OpenTelemetry
-import io.opentelemetry.api.trace.Tracer
 import io.opentelemetry.instrumentation.ktor.v2_0.server.KtorServerTracing
+import setupOpenTelemetry
 
 fun main() {
     embeddedServer(Netty, port = 8081, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
-    ElasticApmAttacher.attach()
+    System.setProperty("otel.javaagent.debug", "true")
+
 }
 
 fun Application.module() {
-    val openTelemetry: OpenTelemetry = OpenTelemetry.noop()
+    val openTelemetry: OpenTelemetry = setupOpenTelemetry()
     install(KtorServerTracing) {
         setOpenTelemetry(openTelemetry)
     }
-    val tracer : Tracer = openTelemetry.getTracer("")
 
     val kafkaBootStrapServers = "kafka:9092"
     val producer = KafkaProducerConfig(kafkaBootStrapServers)
