@@ -1,5 +1,7 @@
 package io.ldca.plugins
 
+import io.opentelemetry.instrumentation.kafkaclients.v2_6.TracingConsumerInterceptor
+import io.opentelemetry.instrumentation.kafkaclients.v2_6.TracingProducerInterceptor
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -11,6 +13,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 import java.time.Duration
 import java.util.Properties
+import org.apache.kafka.clients.producer.ProducerConfig
 
 class KafkaConsumerConfig(bootstrapServers: String, groupId: String) {
 
@@ -20,6 +23,7 @@ class KafkaConsumerConfig(bootstrapServers: String, groupId: String) {
         put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java.name)
         put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java.name)
         put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+        put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, TracingConsumerInterceptor::class.java.name)
     }
 
     private val consumer: KafkaConsumer<String, String> = KafkaConsumer(properties)

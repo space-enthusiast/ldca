@@ -30,6 +30,7 @@ dependencies {
     implementation("org.apache.kafka:kafka-clients:3.8.0")
     implementation("org.apache.kafka:kafka-streams:3.8.0")
     implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-kafka-clients-2.6:2.8.0-alpha")
     implementation("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.41.0")
     implementation("io.opentelemetry:opentelemetry-api:1.41.0")
     implementation("io.opentelemetry:opentelemetry-exporter-otlp:1.41.0")

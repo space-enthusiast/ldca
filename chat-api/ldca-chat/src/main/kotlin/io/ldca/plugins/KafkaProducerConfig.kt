@@ -1,5 +1,6 @@
 package io.ldca.plugins
 
+import io.opentelemetry.instrumentation.kafkaclients.v2_6.TracingProducerInterceptor
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -11,6 +12,8 @@ class KafkaProducerConfig(bootstrapServers: String) {
         put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers)
         put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java.name)
         put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java.name)
+        // OpenTelemetry tracing interceptor
+        put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, TracingProducerInterceptor::class.java.name)
     }
 
     private val producer: KafkaProducer<String, String> = KafkaProducer(properties)

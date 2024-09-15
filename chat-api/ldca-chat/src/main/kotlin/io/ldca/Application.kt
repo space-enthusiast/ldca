@@ -13,10 +13,9 @@ import io.opentelemetry.instrumentation.ktor.v2_0.server.KtorServerTracing
 import setupOpenTelemetry
 
 fun main() {
+    System.setProperty("otel.javaagent.debug", "true")
     embeddedServer(Netty, port = 8081, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
-    System.setProperty("otel.javaagent.debug", "true")
-
 }
 
 fun Application.module() {

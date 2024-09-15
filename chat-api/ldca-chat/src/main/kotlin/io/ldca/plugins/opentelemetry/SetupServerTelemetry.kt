@@ -22,8 +22,8 @@ fun setupOpenTelemetry(): OpenTelemetry {
 
     // Configure the OTLP gRPC exporter
     val spanExporter : OtlpGrpcSpanExporter = OtlpGrpcSpanExporter.builder()
-//        .setEndpoint("http://host.docker.internal:8200")
-        .setEndpoint("http://fleet-server:8200")
+        .setEndpoint("http://host.docker.internal:8200")
+//        .setEndpoint("http://fleet-server:8200")
         .addHeader("Authorization", "Bearer supersecrettoken")
         .build();
 
