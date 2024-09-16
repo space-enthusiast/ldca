@@ -57,7 +57,7 @@
         const chatRoomUuid = segments[2];
         const userUuid = segments[4];
 
-        socket = new WebSocket(`ws://127.0.0.1:80/api/chat/${chatRoomUuid}/user/${userUuid}`);
+        socket = new WebSocket(`ws://${window.location.hostname}/api/chat/${chatRoomUuid}/user/${userUuid}`);
 
         socket.addEventListener('message', function(event) {
             const message = event.data;
