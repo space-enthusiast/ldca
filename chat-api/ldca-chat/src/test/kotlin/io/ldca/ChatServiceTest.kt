@@ -10,7 +10,13 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ldca.plugins.KafkaProducerConfig
 import io.ldca.plugins.configureChat
+import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.StringSerializer
+import java.util.Properties
 import java.util.UUID
 
 class ChatServiceTest: FreeSpec({
@@ -25,7 +31,7 @@ class ChatServiceTest: FreeSpec({
                     val adminClient = KafkaAdminClient.instance
                     val newTopic = NewTopic(
                         "chatroom-$chatRoomId",
-                        1,
+                        3,
                         1,
                     )
                     adminClient.createTopics(listOf(newTopic)).all().get()
@@ -62,6 +68,36 @@ class ChatServiceTest: FreeSpec({
                 }
                 messageReceived shouldBe true
             }
+        }
+
+        "partition key consistency test" {
+            val chatRoomId = UUID.randomUUID().toString()
+            val topic = "chatroom-$chatRoomId"
+            val messageCount = 10
+
+            val adminProps = Properties().apply {
+                put("bootstrap.servers", kafkaTestContainer.bootstrapServers)
+            }
+            val adminClient = AdminClient.create(adminProps)
+            adminClient.createTopics(listOf(NewTopic(topic, 3, 1))).all().get()
+
+            val producerProps = Properties().apply {
+                put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaTestContainer.bootstrapServers)
+                put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java.name)
+                put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java.name)
+            }
+            val producer = KafkaProducer<String, String>(producerProps)
+
+            val partitions = (1..messageCount).map { i ->
+                val record = ProducerRecord(topic, chatRoomId, "message-$i")
+                producer.send(record).get().partition()
+            }
+
+            producer.close()
+            adminClient.close()
+
+            partitions.size shouldBe messageCount
+            partitions.distinct().size shouldBe 1
         }
     }
 })

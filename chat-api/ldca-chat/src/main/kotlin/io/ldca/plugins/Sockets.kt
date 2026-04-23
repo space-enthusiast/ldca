@@ -105,7 +105,7 @@ fun Application.configureChat(
                             )
                             producer.sendMessage(
                                 topic = chatRoomTopic,
-                                key = chatMessage.id.toString(),
+                                key = chatRoomId,
                                 value = chatMessage.message,
                             )
                         }

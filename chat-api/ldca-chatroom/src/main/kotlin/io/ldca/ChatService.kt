@@ -23,7 +23,7 @@ class ChatService {
             name = chatRoomName,
             kafkaTopicName = "chatroom-${UUID.randomUUID()}".also { createTopic(
                 topicName = it,
-                numPartitions = 1,
+                numPartitions = 3,
                 replicationFactor = 1
             ) }
         )
